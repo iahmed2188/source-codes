@@ -1,0 +1,71 @@
+source-codes
+============
+
+Main file
+#include"stdafx.h"
+#include<iostream>
+#include "Dice Work.h"
+#include<string>
+using namespace std;
+using std::string;
+
+using namespace System;
+
+int main()
+{
+	DiceWork myDiceWork;
+	int UserChoice;
+
+	cout<< "Ready to roll the dice and try your luck? " << endl;
+	cout<< "Choose a number between 2 and 12 " << endl;
+	cin>> UserChoice;
+	myDiceWork.UserCheck(UserChoice);
+	myDiceWork.RandomNumber(UserChoice);
+
+return 0;
+} // end main function
+
+Header file
+#include"stdafx.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include"time.h"
+#include<iostream>
+#include<string>
+using namespace std;
+using std::string;
+
+using namespace System;
+
+class DiceWork  // used to do all the work to keep main function clean
+{
+public:
+	void UserCheck(int UserChoice)  // Checks the user input for number 2-12
+	{
+		while( UserChoice>12 || UserChoice<2)
+		{
+			cout << "Invalid input, please try again " << endl;
+			cin >> UserChoice;
+		}
+	}
+
+	void RandomNumber(int UserChoice)  // generates random numbers for dice
+	{
+		srand(time(0));
+		int Dice1,Dice2,TotalDice;
+		Dice1=rand() %6 +1;
+		Dice2=rand() %6 +1;
+		TotalDice=Dice1+Dice2;
+		cout << endl;
+		cout<< " Dice 1 = " << Dice1 << endl;
+		system("pause");
+		cout<< " Dice 2 = " << Dice2 << endl;
+		cout<< " Total of Dice = " << TotalDice << endl;
+		system("pause");
+		if(UserChoice==TotalDice)		// display winner or loser
+			cout<< "Winner winner chicken dinner!!!!" << endl;
+		if(UserChoice!=TotalDice)
+			cout<< "Better luck next time, thanks for playing!" << endl;
+		system("pause");
+	}
+}; // end class
