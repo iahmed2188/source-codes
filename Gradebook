@@ -1,0 +1,86 @@
+source-codes
+============
+Main file
+#include"stdafx.h"
+#include<iostream>
+#include "GradeBook.h"
+using namespace std;
+using std::string;
+using namespace System;
+
+int main(array<System::String ^> ^args)
+{
+	string Name;
+	double hw1,hw2,hw3,hw4,hw5,midterm,final;
+	cout<<" Enter student name " << endl;
+	cin >> Name;
+	cout<< "Enter in grades for HW1 through HW5 " << endl;
+   cin>>hw1>>hw2>>hw3>>hw4>>hw5;
+   cout<< "Enter in Midterm and Final Exam grades " << endl;
+   cin>> midterm >> final;
+   GradeBook myGradeBook;							//call class
+   myGradeBook.displayMessage("ECET 344 Fall 2012"); //display course name msg
+   myGradeBook.displayName(Name);					//display name
+   myGradeBook.hwGrades(hw1,hw2,hw3,hw4,hw5);		//display hw grades
+   myGradeBook.Exams(midterm,final);				//display exam grades
+   myGradeBook.ClassGrade(hw1,hw2,hw3,hw4,hw5,midterm,final); //display course grade
+   system("pause");
+    return 0;
+}
+
+Header File
+#include"stdafx.h"
+#include<iostream>
+#include<string>
+
+using namespace std;
+using namespace System;
+using std::string;
+using std::getline;
+
+class GradeBook						// name of class
+{
+public:					 //means everyone can see it, can change to private
+	string courseName;
+	string Name;
+	double hw1,hw2,hw3,hw4,hw5;
+
+	void displayMessage(string courseName)			//displays a welcome message
+	{
+		cout << "My first class program for: " << courseName << endl;
+		system("pause");
+	}
+	
+	string displayName(string Name)		//outputs student name
+	{
+		cout<<"His name is: "<< Name << endl;
+		return Name;
+	}
+	
+	double hwGrades(double hw1,double hw2,double hw3,double hw4, double hw5) //outputs hw grades
+	{
+		cout<< "HW1= " << hw1 << endl;
+		cout<< "HW2= " << hw2 << endl;
+		cout<< "HW3= " << hw3 << endl;
+		cout<< "HW4= " << hw4 << endl;
+		cout<< "HW5= " << hw5 << endl;
+		return 0;
+	}
+
+	double Exams(double midterm,double final) //outputs exam grades
+	{
+		cout<< "Midterm= " << midterm << endl;
+		cout<< "Final= " << final << endl;
+		return 0;
+	}
+
+	double ClassGrade(double hw1,double hw2,double hw3,double hw4,double hw5,double midterm,double final)
+	{
+		double finalHW,finalExams,finalGrade;		
+		finalHW=.5*((hw1+hw2+hw3+hw4+hw5)/100);		//calculate total hw grade
+		finalExams=.5*((midterm+final)/200);			//calculate total exam grade
+		finalGrade=100*(finalHW+finalExams);			//calculate course grade
+		cout<< "Course Grade= " << finalGrade << endl;	//display course grade
+		return 0;
+	}
+};								//class must end with semi-colon
