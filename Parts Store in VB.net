@@ -1,0 +1,230 @@
+Option Strict On
+
+Public Class Lab5
+    Dim shipping As Decimal
+
+    
+#Region " File Menu Events "
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        Dim MessageString As String = "Do you want to close the form?"
+        Dim ButtonDialogResult As DialogResult = MessageBox.Show(MessageString, "Quit?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
+        If ButtonDialogResult = Windows.Forms.DialogResult.Yes Then
+            Me.Close()
+        End If
+    End Sub
+
+
+    Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem1.Click
+        'Call Exit Button Click event
+        Button3.PerformClick()
+    End Sub
+#End Region
+#Region " Action Menu Events "
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        'call functions to handle math operations and display to output
+        Try
+            If ValidData() Then
+                Dim taxx As Decimal
+                Dim costt As Decimal
+                Dim shipp As Decimal
+                Dim total As Decimal
+
+                'put function values into variables for output
+                taxx = SalesTax(Cost)
+                costt = Cost()
+                shipp = ShippingHandling()
+                total = taxx + costt + shipp
+
+                'output results
+                TextBox7.Text = costt.ToString("C")
+                TextBox8.Text = taxx.ToString("C")
+                TextBox9.Text = shipp.ToString("C")
+                TextBox10.Text = total.ToString("C")
+
+            End If
+        Catch ex As Exception
+            MessageBox.Show("Unexpected error: " & ControlChars.NewLine & ex.Message, "Compute Button Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+    Private Sub ToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem2.Click
+        'Call Compute Button Click event
+        Button1.PerformClick()
+    End Sub
+    Private Sub Button2_Click_1(sender As Object, e As EventArgs) Handles Button2.Click
+        'Call reset function
+        Reset()
+    End Sub
+
+    Private Sub Reset()
+        'reset all fields to program default per instructions
+        TextBox1.Clear()
+        TextBox2.Clear()
+        TextBox3.Clear()
+        TextBox4.Clear()
+        TextBox5.Clear()
+        TextBox6.Clear()
+        TextBox7.Clear()
+        TextBox8.Clear()
+        TextBox9.Clear()
+        TextBox10.Clear()
+        MaskedTextBox1.Clear()
+        CheckBox1.Checked = True
+        CheckBox2.Checked = False
+        RadioButton1.Checked = True
+        RadioButton2.Checked = False
+        RadioButton3.Checked = False
+        RadioButton4.Checked = False
+        MaskedTextBox1.Focus()
+
+    End Sub
+
+    Private Sub NewOrderToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NewOrderToolStripMenuItem.Click
+        'Call New Order Button Click event
+        Button2.PerformClick()
+    End Sub
+
+
+
+    Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem3.Click
+        'Change the form's back color property.
+        'Stores current form color to the control's Color property.
+        'Display the Color Component, and save the new color
+        'to the form's BackColor property.
+        Dim ColorDialog1 As New ColorDialog
+        ColorDialog1.Color = Me.BackColor
+        ColorDialog1.ShowDialog()
+        Me.BackColor = ColorDialog1.Color
+        MenuStrip1.BackColor = ColorDialog1.Color
+
+    End Sub
+
+    Private Sub ToolStripMenuItem4_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem4.Click
+        'Change the font used for the entire form.
+        'Store current font to the control's Font property.
+        'Display the Font Component, and save the new font
+        'to the form's controls.
+        Dim FontDialog1 As New FontDialog
+        FontDialog1.Font = Me.Font
+        FontDialog1.ShowDialog()
+        Me.Font = FontDialog1.Font
+        MenuStrip1.Font = FontDialog1.Font
+
+    End Sub
+
+#End Region
+#Region " Help menu "
+    Private Sub ToolStripMenuItem5_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem5.Click
+        'Display about message box
+        Dim MessageString As String = "Programmed by Imtiaz Ahmed" & ControlChars.NewLine & "Today's Date/Time: " & Date.Now.ToString
+        Dim TitleString As String = "About Edwardsville Auto"
+
+        'Display output message
+        MessageBox.Show(MessageString, TitleString, MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+    End Sub
+#End Region
+#Region " Functions "
+   
+
+    Private Function ShippingHandling() As Decimal
+        'declare shipping and handling amount per part
+        Const UPS As Decimal = 7D
+        Const USPS As Decimal = 8.5D
+        Const fedex As Decimal = 9.25D
+        Const fedexair As Decimal = 12D
+        Const oversize As Decimal = 5D
+
+        'check which shipping method was selected
+
+        If RadioButton1.Checked = True Then
+            shipping = UPS
+        End If
+        If RadioButton2.Checked = True Then
+            shipping = USPS
+        End If
+        If RadioButton3.Checked = True Then
+            shipping = fedex
+        End If
+        If RadioButton4.Checked = True Then
+            shipping = fedexair
+        End If
+        If CheckBox2.Checked = True Then
+            shipping = shipping + oversize
+        End If
+
+        ShippingHandling = Decimal.Round(shipping, 2) * (Decimal.Parse(TextBox6.Text, Globalization.NumberStyles.Number))
+    End Function
+
+    Private Function ValidData() As Boolean
+        ValidData = False
+
+        'Enforce data validation rules
+        If MaskedTextBox1.Text.IndexOf(" ", 0, MaskedTextBox1.Text.Length) <> -1 OrElse MaskedTextBox1.Text.Trim.Length <> 11 Then
+            'Required customer ID is not long enough or is not complete
+            MessageBox.Show("Customer ID required", "Customer ID Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MaskedTextBox1.Focus()
+            MaskedTextBox1.SelectAll()
+        ElseIf TextBox2.Text = String.Empty Then
+            'Required name is missing
+            MessageBox.Show("Name is required", "Name Missing Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TextBox2.Focus()
+        ElseIf TextBox3.Text.Trim.Length <> 2 OrElse TextBox3.Text = String.Empty Then
+            'Required state is missing or not 2 letters
+            MessageBox.Show("Two letter state abbreviation is required", "State Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TextBox3.Focus()
+        ElseIf TextBox1.Text = String.Empty Then
+            'Required part number is missing
+            MessageBox.Show("Part number is required", "Part number Missing Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TextBox1.Focus()
+        ElseIf TextBox4.Text = String.Empty Then
+            'Required description is missing
+            MessageBox.Show("Description is required", "Description Missing Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TextBox4.Focus()
+        ElseIf IsNumeric(TextBox5.Text) = False OrElse (Decimal.Parse(TextBox5.Text, Globalization.NumberStyles.Currency) < 0D) Then
+            'Price per part must be numeric and greater than 0
+            MessageBox.Show("Price per part must be greater than 0", "Price Per Part Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TextBox5.Focus()
+            TextBox5.SelectAll()
+        ElseIf IsNumeric(TextBox6.Text) = False OrElse (Decimal.Parse(TextBox6.Text, Globalization.NumberStyles.Number) < 1D) Then
+            'Quantity must be numeric and greater than 0
+            MessageBox.Show("Quantity must be greater than 0", "Quantity Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TextBox6.Focus()
+            TextBox6.SelectAll()
+        Else
+            'Data rules are all valid
+            ValidData = True
+        End If
+    End Function
+
+    Private Function Cost() As Decimal
+        'calculate cost to pass to sales tax
+        Dim partscost As Decimal
+
+        partscost = (Decimal.Parse(TextBox5.Text, Globalization.NumberStyles.Currency)) * (Decimal.Parse(TextBox6.Text, Globalization.NumberStyles.Number))
+        Return partscost
+    End Function
+
+    Private Function SalesTax(ByVal Cost As Decimal) As Decimal
+        'pass in the parts cost and calculate sales tax
+        'depends on state and if retail customer or not
+        Dim tax As Decimal
+
+        If CheckBox1.Checked = False Then
+            tax = 0D
+        ElseIf TextBox3.Text = "CA" Then
+            tax = 0.1D
+        ElseIf TextBox3.Text = "NY" OrElse TextBox3.Text = "FL" Then
+            tax = 0.05D
+        Else
+            tax = 0D
+        End If
+        SalesTax = tax * Cost
+
+    End Function
+
+
+
+#End Region
+
+   
+End Class
